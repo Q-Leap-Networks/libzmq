@@ -1,3 +1,9 @@
+zeromq (4.2.2-ql.2) stable; urgency=medium
+
+  * build using libsodium for easier security support
+
+ -- Goswin von Brederlow <brederlo@q-leap.de>  Thu, 16 Mar 2017 10:36:53 +0000
+
 zeromq (4.2.2-ql.1) unstable; urgency=medium
 
   * New upstream version 4.2.2
