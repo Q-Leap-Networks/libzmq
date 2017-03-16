@@ -15,7 +15,7 @@ endif
 
 override_dh_auto_configure:
 	./autogen.sh
-	dh_auto_configure -- --with-system-pgm
+	dh_auto_configure -- --with-libsodium
 
 override_dh_strip:
 	dh_strip --dbg-package=libzmq5-dbg
