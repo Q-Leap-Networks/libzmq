@@ -1,0 +1,41 @@
+From: Goswin von Brederlow <brederlo@q-leap.de>
+Date: Thu, 16 Mar 2017 11:02:04 +0000
+Subject: zmq_curve_keypair(): return result from crypto_box_keypair() to make
+ testcase meaningfull
+
+---
+ src/zmq_utils.cpp     | 5 ++---
+ tests/test_sodium.cpp | 1 -
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/src/zmq_utils.cpp b/src/zmq_utils.cpp
+index edaebf2..a220552 100644
+--- a/src/zmq_utils.cpp
++++ b/src/zmq_utils.cpp
+@@ -217,12 +217,11 @@ int zmq_curve_keypair (char *z85_public_key, char *z85_secret_key)
+     uint8_t public_key [32];
+     uint8_t secret_key [32];
+ 
+-    // Return codes are suppressed as none of these can actually fail.
+-    crypto_box_keypair (public_key, secret_key);
++    int res = crypto_box_keypair (public_key, secret_key);
+     zmq_z85_encode (z85_public_key, public_key, 32);
+     zmq_z85_encode (z85_secret_key, secret_key, 32);
+ 
+-    return 0;
++    return res;
+ #else
+     (void) z85_public_key, (void) z85_secret_key;
+     errno = ENOTSUP;
+diff --git a/tests/test_sodium.cpp b/tests/test_sodium.cpp
+index 4deefe5..d6dfe42 100644
+--- a/tests/test_sodium.cpp
++++ b/tests/test_sodium.cpp
+@@ -40,7 +40,6 @@ void test__zmq_curve_keypair__always__success (void)
+ 
+ #if defined (ZMQ_HAVE_CURVE)
+     assert (rc == 0);
+-    assert (zmq_errno () == 0);
+ #else
+     assert (rc == -1);
+     assert (zmq_errno () == ENOTSUP);
