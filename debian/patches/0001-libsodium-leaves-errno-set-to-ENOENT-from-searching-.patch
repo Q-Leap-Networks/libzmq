@@ -1,0 +1,30 @@
+From: Goswin von Brederlow <brederlo@q-leap.de>
+Date: Thu, 16 Mar 2017 11:02:04 +0000
+Subject: libsodium leaves errno set to ENOENT from searching for random bits
+
+---
+ tests/test_sodium.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tests/test_sodium.cpp b/tests/test_sodium.cpp
+index 4deefe5..7089684 100644
+--- a/tests/test_sodium.cpp
++++ b/tests/test_sodium.cpp
+@@ -28,6 +28,7 @@
+ */
+ 
+ #include "testutil.hpp"
++#include <stdio.h>
+ 
+ // There is no way to test for correctness because of the embedded RNG.
+ void test__zmq_curve_keypair__always__success (void)
+@@ -40,7 +41,8 @@ void test__zmq_curve_keypair__always__success (void)
+ 
+ #if defined (ZMQ_HAVE_CURVE)
+     assert (rc == 0);
+-    assert (zmq_errno () == 0);
++    // libsodium leaves errno set to ENOENT from searching for random bits
++    // assert (zmq_errno () == 0);
+ #else
+     assert (rc == -1);
+     assert (zmq_errno () == ENOTSUP);
